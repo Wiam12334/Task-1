@@ -14,7 +14,7 @@ public class CityTemperature {
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Lire la ligne d'en-tête si présente
+            // Lire et ignorer la ligne d'en-tête
             String header = br.readLine(); // Lire et ignorer la ligne d'en-tête
 
             while ((line = br.readLine()) != null) {
