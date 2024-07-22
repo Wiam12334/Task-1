@@ -19,3 +19,26 @@ public class CityTemperature {
                 String[] data = line.split(cvsSplitBy);
                 String city = data[1];
                 double temperature = Double.parseDouble(data[2]);
+                if (cityTemperatures.containsKey(city)) {
+                    double[] temps = cityTemperatures.get(city);
+                    temps[0] = Math.max(temps[0], temperature);
+                    temps[1] = Math.min(temps[1], temperature);
+                    temps[2] += temperature;
+                    temps[3]++;
+                } else {
+                    double[] temps = new double[4];
+                    temps[0] = temperature; // max temp
+                    temps[1] = temperature; // min temp
+                    temps[2] = temperature; // sum of temps
+                    temps[3] = 1;           // count of temps
+                    cityTemperatures.put(city, temps);
+                }
+
+                lineCount++;
+            }
+
+            // Calculer la température moyenne
+            for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
+                double[] temps = entry.getValue();
+                temps[2] = temps[2] / temps[3];
+            }
