@@ -42,3 +42,14 @@ public class CityTemperature {
                 double[] temps = entry.getValue();
                 temps[2] = temps[2] / temps[3];
             }
+// Afficher les résultats
+            for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
+                double[] temps = entry.getValue();
+                System.out.println(entry.getKey() + ": [" + temps[0] + ", " + temps[1] + ", " + temps[2] + "]");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
