@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class CityTemperature {
     public static void main(String[] args) {
-        String csvFile = "C:/Users/user/Desktop/weather_data";
+        String csvFile = "C:/Users/hp/Downloads/weather_data";
         String line;
         String cvsSplitBy = ",";
         int maxLines = 50;
