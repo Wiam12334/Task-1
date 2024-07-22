@@ -15,22 +15,16 @@ public class CityTemperature {
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
             // Lire la ligne d'en-tête si présente
-            boolean headerSkipped = false;
+            String header = br.readLine(); // Lire et ignorer la ligne d'en-tête
 
             while ((line = br.readLine()) != null) {
-                // Ignorer la première ligne si elle contient des en-têtes
-                if (!headerSkipped) {
-                    headerSkipped = true; // Ne pas ignorer les lignes suivantes
-                    continue; // Passe à la ligne suivante
-                }
-
                 // Séparer les données de la ligne
                 String[] data = line.split(cvsSplitBy);
 
                 // Vérifier que la ligne contient suffisamment de colonnes
                 if (data.length >= 3) {
-                    String city = data[0].trim(); // Assurez-vous que c'est le bon index pour la ville
-                    String tempString = data[1].trim();
+                    String city = data[1].trim(); // Index 1 pour la ville
+                    String tempString = data[2].trim(); // Index 2 pour la température
 
                     try {
                         double temperature = Double.parseDouble(tempString);
