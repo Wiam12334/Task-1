@@ -9,7 +9,7 @@ public class CityTemperature {
         String csvFile = "merged_data[1].csv"; // Remplacez par le chemin réel de votre fichier CSV
         String line;
         String cvsSplitBy = ",";
-        int maxLines = 50;
+        int maxLines = 50; // Limiter le nombre de lignes lues
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
@@ -27,9 +27,9 @@ public class CityTemperature {
 
                 // Vérifiez que les données sont valides
                 if (data.length >= 3) {
-                    String city = data[1].trim();
+                    String city = data[1].trim(); // Index 1 pour la ville
                     try {
-                        double temperature = Double.parseDouble(data[2].trim());
+                        double temperature = Double.parseDouble(data[2].trim()); // Index 2 pour la température
 
                         if (cityTemperatures.containsKey(city)) {
                             double[] temps = cityTemperatures.get(city);
@@ -69,6 +69,6 @@ public class CityTemperature {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
+        }
+    }
 }
