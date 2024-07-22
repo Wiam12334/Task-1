@@ -6,28 +6,30 @@ import java.util.Map;
 
 public class CityTemperature {
     public static void main(String[] args) {
-        String csvFile = "merged_data[1].csv"; // Assurez-vous que ce chemin est correct
+        String csvFile = "merged_data[1].csv"; // Remplacez par le chemin réel de votre fichier CSV
         String line;
         String cvsSplitBy = ",";
+        int maxLines = 50;
 
-        // Utiliser une Map pour stocker les données de température
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Lire et ignorer la ligne d'en-tête
-            String header = br.readLine(); // Lire et ignorer la ligne d'en-tête
+            int lineCount = 0;
 
-            while ((line = br.readLine()) != null) {
-                // Séparer les données de la ligne
+            while ((line = br.readLine()) != null && lineCount < maxLines) {
+                // Ignore la ligne d'en-tête si présente
+                if (lineCount == 0 && line.contains("city,temperature")) {
+                    lineCount++;
+                    continue;
+                }
+
                 String[] data = line.split(cvsSplitBy);
 
-                // Vérifier que la ligne contient suffisamment de colonnes
+                // Vérifiez que les données sont valides
                 if (data.length >= 3) {
-                    String city = data[1].trim(); // Index 1 pour la ville
-                    String tempString = data[2].trim(); // Index 2 pour la température
-
+                    String city = data[1].trim();
                     try {
-                        double temperature = Double.parseDouble(tempString);
+                        double temperature = Double.parseDouble(data[2].trim());
 
                         if (cityTemperatures.containsKey(city)) {
                             double[] temps = cityTemperatures.get(city);
@@ -44,11 +46,13 @@ public class CityTemperature {
                             cityTemperatures.put(city, temps);
                         }
                     } catch (NumberFormatException e) {
-                        System.err.println("Invalid temperature format at line: " + line + " Error: " + e.getMessage());
+                        System.err.println("Invalid temperature format at line " + (lineCount + 1) + ": " + data[2]);
                     }
                 } else {
-                    System.err.println("Invalid data line: " + line);
+                    System.err.println("Invalid data line at line " + (lineCount + 1) + ": " + line);
                 }
+
+                lineCount++;
             }
 
             // Calculer la température moyenne
@@ -65,6 +69,6 @@ public class CityTemperature {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
+        }
+    }
 }
