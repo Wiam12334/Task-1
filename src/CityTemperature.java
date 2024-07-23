@@ -50,8 +50,4 @@ public class CityTemperature {
             e.printStackTrace();
         }
     }
-} (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
