@@ -29,20 +29,20 @@ public class CityTemperature {
                 String temperatureStr = data[2];
 
                 // Vérifiez si la donnée de température est un nombre valide
-                double temperature = 0;
+                double temperature;
                 if (isNumeric(temperatureStr)) {
                     temperature = Double.parseDouble(temperatureStr);
                 } else {
-                    System.err.println("Erreur de format de nombre pour la température: " + temperatureStr);
+                    // Ignorez cette ligne si la température n'est pas valide
                     continue;
                 }
 
                 if (cityTemperatures.containsKey(city)) {
                     double[] temps = cityTemperatures.get(city);
-                    temps[0] = Math.max(temps[0], temperature);
-                    temps[1] = Math.min(temps[1], temperature);
-                    temps[2] += temperature;
-                    temps[3]++;
+                    temps[0] = Math.max(temps[0], temperature); // Température maximale
+                    temps[1] = Math.min(temps[1], temperature); // Température minimale
+                    temps[2] += temperature; // Somme des températures
+                    temps[3]++; // Nombre de températures
                 } else {
                     double[] temps = new double[4];
                     temps[0] = temperature; // max temp
@@ -62,7 +62,7 @@ public class CityTemperature {
             // Afficher les résultats
             for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
                 double[] temps = entry.getValue();
-                System.out.println(entry.getKey() + ": [" + temps[0] + ", " + temps[1] + ", " + temps[2] + "]");
+                System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
             }
 
         } catch (IOException e) {
