@@ -5,72 +5,75 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CityTemperature {
+    private static final String CSV_FILE = "merged_data[1].csv";
+    private static final String CSV_SPLIT_BY = ",";
+    private static final int CITY_INDEX = 1;
+    private static final int TEMPERATURE_INDEX = 2;
+
     public static void main(String[] args) {
-        String csvFile = "merged_data[1].csv";
-        String line;
-        String cvsSplitBy = ",";
-        
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Lire et ignorer la première ligne (en-têtes)
-            String headerLine = br.readLine();
-            
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(cvsSplitBy);
-                
-                // Vérifiez si la ligne contient le nombre attendu de colonnes
-                if (data.length < 3) {
-                    System.err.println("Ligne mal formée: " + line);
-                    continue;
-                }
-
-                String city = data[1];
-                String temperatureStr = data[2];
-
-                // Vérifiez si la donnée de température est un nombre valide
-                double temperature;
-                if (isNumeric(temperatureStr)) {
-                    temperature = Double.parseDouble(temperatureStr);
-                } else {
-                    // Ignorez cette ligne si la température n'est pas valide
-                    continue;
-                }
-
-                if (cityTemperatures.containsKey(city)) {
-                    double[] temps = cityTemperatures.get(city);
-                    temps[0] = Math.max(temps[0], temperature); // Température maximale
-                    temps[1] = Math.min(temps[1], temperature); // Température minimale
-                    temps[2] += temperature; // Somme des températures
-                    temps[3]++; // Nombre de températures
-                } else {
-                    double[] temps = new double[4];
-                    temps[0] = temperature; // max temp
-                    temps[1] = temperature; // min temp
-                    temps[2] = temperature; // sum of temps
-                    temps[3] = 1;           // count of temps
-                    cityTemperatures.put(city, temps);
-                }
-            }
-
-            // Calculer la température moyenne
-            for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
-                double[] temps = entry.getValue();
-                temps[2] = temps[2] / temps[3];
-            }
-
-            // Afficher les résultats
-            for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
-                double[] temps = entry.getValue();
-                System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
-            }
-
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
+            processFile(br, cityTemperatures);
+            computeAverages(cityTemperatures);
+            printResults(cityTemperatures);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Méthode pour vérifier si une chaîne est un nombre valide
+    private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
+        String line;
+        // Lire et ignorer la première ligne (en-têtes)
+        br.readLine();
+
+        while ((line = br.readLine()) != null) {
+            String[] data = line.split(CSV_SPLIT_BY);
+            
+            // Vérifiez si la ligne contient le nombre attendu de colonnes
+            if (data.length < 3) {
+                System.err.println("Ligne mal formée: " + line);
+                continue;
+            }
+
+            String city = data[CITY_INDEX];
+            String temperatureStr = data[TEMPERATURE_INDEX];
+
+            // Vérifiez si la donnée de température est un nombre valide
+            if (!isNumeric(temperatureStr)) {
+                // Ignorez cette ligne si la température n'est pas valide
+                continue;
+            }
+
+            double temperature = Double.parseDouble(temperatureStr);
+            cityTemperatures.compute(city, (k, v) -> {
+                if (v == null) {
+                    return new double[]{temperature, temperature, temperature, 1}; // max, min, sum, count
+                } else {
+                    v[0] = Math.max(v[0], temperature); // Température maximale
+                    v[1] = Math.min(v[1], temperature); // Température minimale
+                    v[2] += temperature; // Somme des températures
+                    v[3]++; // Nombre de températures
+                    return v;
+                }
+            });
+        }
+    }
+
+    private static void computeAverages(Map<String, double[]> cityTemperatures) {
+        for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
+            double[] temps = entry.getValue();
+            temps[2] /= temps[3]; // Calcul de la température moyenne
+        }
+    }
+
+    private static void printResults(Map<String, double[]> cityTemperatures) {
+        for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
+            double[] temps = entry.getValue();
+            System.out.println(entry.getKey() + ": [Max: " + temps[0] + ", Min: " + temps[1] + ", Avg: " + temps[2] + "]");
+        }
+    }
+
     private static boolean isNumeric(String str) {
         if (str == null) {
             return false;
