@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class CityTemperature {
     public static void main(String[] args) {
-        String csvFile = "path_to_your_csv_file.csv";
+        String csvFile = "merged_data[1].csv";
         String line;
         String cvsSplitBy = ",";
         
