@@ -13,7 +13,7 @@ public class CityTemperature {
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Lire la première ligne (en-têtes) et l'ignorer
+            // Lire et ignorer la première ligne (en-têtes)
             String headerLine = br.readLine();
             
             while ((line = br.readLine()) != null) {
@@ -26,13 +26,14 @@ public class CityTemperature {
                 }
 
                 String city = data[1];
-                
-                // Essayez de convertir en double et gérez les exceptions
-                double temperature;
-                try {
-                    temperature = Double.parseDouble(data[2]);
-                } catch (NumberFormatException e) {
-                    System.err.println("Erreur de format de nombre pour la température: " + data[2]);
+                String temperatureStr = data[2];
+
+                // Vérifiez si la donnée de température est un nombre valide
+                double temperature = 0;
+                if (isNumeric(temperatureStr)) {
+                    temperature = Double.parseDouble(temperatureStr);
+                } else {
+                    System.err.println("Erreur de format de nombre pour la température: " + temperatureStr);
                     continue;
                 }
 
@@ -66,6 +67,19 @@ public class CityTemperature {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Méthode pour vérifier si une chaîne est un nombre valide
+    private static boolean isNumeric(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
