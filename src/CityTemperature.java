@@ -13,10 +13,28 @@ public class CityTemperature {
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            // Lire la première ligne (en-têtes) et l'ignorer
+            String headerLine = br.readLine();
+            
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(cvsSplitBy);
+                
+                // Vérifiez si la ligne contient le nombre attendu de colonnes
+                if (data.length < 3) {
+                    System.err.println("Ligne mal formée: " + line);
+                    continue;
+                }
+
                 String city = data[1];
-                double temperature = Double.parseDouble(data[2]);
+                
+                // Essayez de convertir en double et gérez les exceptions
+                double temperature;
+                try {
+                    temperature = Double.parseDouble(data[2]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Erreur de format de nombre pour la température: " + data[2]);
+                    continue;
+                }
 
                 if (cityTemperatures.containsKey(city)) {
                     double[] temps = cityTemperatures.get(city);
