@@ -11,6 +11,9 @@ public class CityTemperature {
     private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
+        long startTime = System.nanoTime(); // Début de la mesure du temps
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Début de la mesure de la mémoire
+
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
@@ -20,6 +23,16 @@ public class CityTemperature {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        long endTime = System.nanoTime(); // Fin de la mesure du temps
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Fin de la mesure de la mémoire
+
+        // Calculer et afficher le temps d'exécution et la mémoire utilisée
+        long duration = endTime - startTime;
+        long memoryUsed = endMemory - startMemory;
+
+        System.out.println("Temps d'exécution: " + duration / 1_000_000 + " ms");
+        System.out.println("Mémoire utilisée: " + memoryUsed / 1024 + " KB");
     }
 
     private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
