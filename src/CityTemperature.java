@@ -11,7 +11,7 @@ public class CityTemperature {
     private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
-        long startTime = System.nanoTime(); // Début de la mesure du temps
+        long startTime = System.nanoTime(); // End of time measurement
         long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Début de la mesure de la mémoire
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
@@ -25,9 +25,9 @@ public class CityTemperature {
         }
 
         long endTime = System.nanoTime(); // Fin de la mesure du temps
-        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Fin de la mesure de la mémoire
+        long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // End of memory measurement
 
-        // Calculer et afficher le temps d'exécution et la mémoire utilisée
+        // Calculate and display the execution time and memory used
         long duration = endTime - startTime;
         long memoryUsed = endMemory - startMemory;
 
@@ -37,13 +37,13 @@ public class CityTemperature {
 
     private static void processFile(BufferedReader br, Map<String, double[]> cityTemperatures) throws IOException {
         String line;
-        // Lire et ignorer la première ligne (en-têtes)
+        // Read and ignore the first line (headers)
         br.readLine();
 
         while ((line = br.readLine()) != null) {
             String[] data = line.split(CSV_SPLIT_BY);
             
-            // Vérifiez si la ligne contient le nombre attendu de colonnes
+            // Verify if the line contains the expected number of columns
             if (data.length < 3) {
                 System.err.println("Ligne mal formée: " + line);
                 continue;
@@ -52,9 +52,9 @@ public class CityTemperature {
             String city = data[CITY_INDEX];
             String temperatureStr = data[TEMPERATURE_INDEX];
 
-            // Vérifiez si la donnée de température est un nombre valide
+            // Check if the temperature data is a valid number
             if (!isNumeric(temperatureStr)) {
-                // Ignorez cette ligne si la température n'est pas valide
+                // Ignore this line if the temperature is not valid
                 continue;
             }
 
@@ -63,10 +63,10 @@ public class CityTemperature {
                 if (v == null) {
                     return new double[]{temperature, temperature, temperature, 1}; // max, min, sum, count
                 } else {
-                    v[0] = Math.max(v[0], temperature); // Température maximale
-                    v[1] = Math.min(v[1], temperature); // Température minimale
-                    v[2] += temperature; // Somme des températures
-                    v[3]++; // Nombre de températures
+                    v[0] = Math.max(v[0], temperature); // Maximum temperature
+                    v[1] = Math.min(v[1], temperature); // Minimum temperature
+                    v[2] += temperature; // Sum of temperatures
+                    v[3]++; // Number of temperatures
                     return v;
                 }
             });
@@ -76,7 +76,7 @@ public class CityTemperature {
     private static void computeAverages(Map<String, double[]> cityTemperatures) {
         for (Map.Entry<String, double[]> entry : cityTemperatures.entrySet()) {
             double[] temps = entry.getValue();
-            temps[2] /= temps[3]; // Calcul de la température moyenne
+            temps[2] /= temps[3]; // Calculation of the average temperature
         }
     }
 
