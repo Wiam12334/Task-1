@@ -11,8 +11,8 @@ public class CityTemperature {
     private static final int TEMPERATURE_INDEX = 2;
 
     public static void main(String[] args) {
-        long startTime = System.nanoTime(); // End of time measurement
-        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Début de la mesure de la mémoire
+        long startTime = System.nanoTime(); // Start of time measurement
+        long startMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // Start of memory measurement
 
         Map<String, double[]> cityTemperatures = new HashMap<>();
 
@@ -24,7 +24,7 @@ public class CityTemperature {
             e.printStackTrace();
         }
 
-        long endTime = System.nanoTime(); // Fin de la mesure du temps
+        long endTime = System.nanoTime(); // End of time measurement
         long endMemory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); // End of memory measurement
 
         // Calculate and display the execution time and memory used
